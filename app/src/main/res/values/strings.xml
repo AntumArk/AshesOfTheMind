@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">AotM</string>
+    <string name="huh">huh?</string>
+
+    <string name="title_activity_tree">TreeActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_main">AotM</string>
+</resources>

@@ -1,89 +1,62 @@
 package zinc.aotm;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.opengl.GLSurfaceView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import Databases.BlockLink;
 
 public class TreeActivity extends AppCompatActivity {
-
     private static final String DEBUGTAG="ZN";
-   // MainSurfaceView mainSurfaceView;
-    ImageButton rootButton;
-    RelativeLayout rootVerticalLayout;
-    LinearLayout rootHorizontalLayout;
 
-    ImageButton nextButton;
-    Button  choiseButton;
-    HorizontalScrollView choiseRow;
-    HorizontalScrollView addRow;
+    //Data preparation
+    private int count=0;
+    private List<BlockLink> linkList=new ArrayList<>();
+
+
+   //List preparation
+    RecyclerView horizontalView;
+    HorizontalViewAdapter horizontalViewAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // mainSurfaceView=new MainSurfaceView(this);
-        //setContentView(mainSurfaceView);
-        setContentView(R.layout.activity_blank);
-        Toast.makeText(this,"Started",Toast.LENGTH_SHORT).show();
-        rootHorizontalLayout=findViewById(R.id.horizontalList);
 
-        rootVerticalLayout=findViewById(R.id.verticalList);
-        rootButton=findViewById(R.id.addButton);
-        rootButton.setOnClickListener(new View.OnClickListener() {
+        setContentView(R.layout.activity_blank);
+
+
+        horizontalView =findViewById(R.id.horizontalList);
+
+        // specify an adapter (see also next example)
+        horizontalViewAdapter = new HorizontalViewAdapter(linkList);
+
+        RecyclerView.LayoutManager mLayoutManager=new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.HORIZONTAL,false);
+
+        // use a linear layout manager
+        horizontalView.setLayoutManager(mLayoutManager);
+        horizontalView.setItemAnimator(new DefaultItemAnimator());
+        horizontalView.setAdapter(horizontalViewAdapter);
+
+
+        Button button=findViewById(R.id.add_item_button);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addButtonOnClickListener();
+            linkList.add(new BlockLink(count,"Random",50,count-1,count+1));
+            count++;
+            horizontalViewAdapter.notifyDataSetChanged();
             }
         });
-
     }
 
-    private void addButtonOnClickListener(){
-        choiseRow=new HorizontalScrollView(this);
-        choiseRow.setLayoutParams(new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT
 
-        ));
-        addRow=new HorizontalScrollView(this);
-        addRow.setLayoutParams(new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT
-        ));
-        choiseButton=new Button(this);
-        choiseButton.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-        ));
-        choiseButton.setText("Yes");
-        nextButton=new ImageButton(this);
-        nextButton.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-        ));
-
-        nextButton.setImageResource(R.mipmap.add_button);
-
-
-        rootVerticalLayout.addView(choiseRow);
-        rootVerticalLayout.addView(addRow)        ;
-        choiseRow.addView(choiseButton);
-        addRow.addView(nextButton);
-    }
     @Override
     protected void onPause() {
         super.onPause();
@@ -97,6 +70,7 @@ public class TreeActivity extends AppCompatActivity {
      //   mainSurfaceView.onResumeMainSurfaceView();
        // openGLView.onResume();
     }
+
 
 
 }
